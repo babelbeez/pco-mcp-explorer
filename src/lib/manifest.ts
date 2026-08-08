@@ -7,7 +7,12 @@ import type { McpTool } from './mcp';
 
 export interface ToolBehaviorBadge {
   label: string;
-  severity: 'success' | 'info' | 'warn' | 'contrast';
+  /**
+   * Literal Tailwind component class (defined in style.css). Kept as a full
+   * literal so Tailwind's static class extraction always sees it — dynamic
+   * class construction would be purged from the production build.
+   */
+  className: 'badge-read' | 'badge-write' | 'badge-destructive' | 'badge-neutral';
 }
 
 export interface ToolInputParameter {
@@ -125,19 +130,26 @@ export function extractBehaviorBadges(annotations: unknown): ToolBehaviorBadge[]
 
   const badges: ToolBehaviorBadge[] = [];
 
+  // Read vs write is the primary signal developers scan for.
   if (annotations.readOnlyHint === true) {
-    badges.push({ label: 'Read-only', severity: 'success' });
+    badges.push({ label: 'Read', className: 'badge-read' });
+  } else if (annotations.readOnlyHint === false) {
+    badges.push({ label: 'Write', className: 'badge-write' });
   }
+
+  // "Can delete data" deserves to stand out from a plain write.
   if (annotations.destructiveHint === true) {
-    badges.push({ label: 'Destructive', severity: 'warn' });
+    badges.push({ label: 'Destructive', className: 'badge-destructive' });
   }
+
+  // Secondary hints stay visible but visually quiet.
   if (annotations.idempotentHint === true) {
-    badges.push({ label: 'Idempotent', severity: 'info' });
+    badges.push({ label: 'Idempotent', className: 'badge-neutral' });
   }
   if (annotations.openWorldHint === true) {
-    badges.push({ label: 'External system', severity: 'contrast' });
+    badges.push({ label: 'External system', className: 'badge-neutral' });
   } else if (annotations.openWorldHint === false) {
-    badges.push({ label: 'Closed system', severity: 'info' });
+    badges.push({ label: 'Closed system', className: 'badge-neutral' });
   }
 
   return badges;

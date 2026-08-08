@@ -96,9 +96,9 @@ let currentTools: McpTool[] = [];
 let currentSession: StoredSession | null = null;
 let currentDiscovery: DiscoveryResult | null = null;
 
-function appendBadge(parent: HTMLElement, label: string, severity: string): void {
+function appendBadge(parent: HTMLElement, label: string, className: string): void {
   const badge = document.createElement('span');
-  badge.className = `badge-${severity}`;
+  badge.className = className;
   badge.textContent = label;
   parent.appendChild(badge);
 }
@@ -145,7 +145,7 @@ function buildToolRow(row: ToolRow): HTMLElement {
     const badges = document.createElement('div');
     badges.className = 'flex flex-wrap gap-1.5';
     for (const badge of row.behaviorBadges) {
-      appendBadge(badges, badge.label, badge.severity);
+      appendBadge(badges, badge.label, badge.className);
     }
     header.appendChild(badges);
   }
@@ -271,7 +271,7 @@ function renderScopes(session: StoredSession): void {
   ui.scopesList.appendChild(label);
 
   for (const scope of scopes) {
-    appendBadge(ui.scopesList, scope, 'info');
+    appendBadge(ui.scopesList, scope, 'badge-scope');
   }
 }
 

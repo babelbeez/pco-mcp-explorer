@@ -80,7 +80,7 @@ describe('extractInputParameters', () => {
 });
 
 describe('extractBehaviorBadges', () => {
-  it('maps annotation hints to badges', () => {
+  it('maps annotation hints to badges with literal Tailwind classes', () => {
     expect(
       extractBehaviorBadges({
         readOnlyHint: true,
@@ -89,16 +89,28 @@ describe('extractBehaviorBadges', () => {
         openWorldHint: false,
       }),
     ).toEqual([
-      { label: 'Read-only', severity: 'success' },
-      { label: 'Destructive', severity: 'warn' },
-      { label: 'Idempotent', severity: 'info' },
-      { label: 'Closed system', severity: 'info' },
+      { label: 'Read', className: 'badge-read' },
+      { label: 'Destructive', className: 'badge-destructive' },
+      { label: 'Idempotent', className: 'badge-neutral' },
+      { label: 'Closed system', className: 'badge-neutral' },
+    ]);
+  });
+
+  it('shows a Write badge when readOnlyHint is explicitly false', () => {
+    expect(extractBehaviorBadges({ readOnlyHint: false })).toEqual([
+      { label: 'Write', className: 'badge-write' },
+    ]);
+  });
+
+  it('shows External system when openWorldHint is true', () => {
+    expect(extractBehaviorBadges({ openWorldHint: true })).toEqual([
+      { label: 'External system', className: 'badge-neutral' },
     ]);
   });
 
   it('returns nothing without annotations', () => {
     expect(extractBehaviorBadges(undefined)).toEqual([]);
-    expect(extractBehaviorBadges({ readOnlyHint: false, destructiveHint: false })).toEqual([]);
+    expect(extractBehaviorBadges({ destructiveHint: false, idempotentHint: false })).toEqual([]);
   });
 });
 
@@ -119,7 +131,7 @@ describe('buildToolRows + filterToolRows', () => {
     expect(rows).toHaveLength(2);
     expect(rows[0].displayTitle).toBe('Search people');
     expect(rows[0].summary).toBe('Finds people.');
-    expect(rows[0].behaviorBadges).toEqual([{ label: 'Read-only', severity: 'success' }]);
+    expect(rows[0].behaviorBadges).toEqual([{ label: 'Read', className: 'badge-read' }]);
     expect(rows[1].displayTitle).toBe('Delete Person');
   });
 

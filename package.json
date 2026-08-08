@@ -1,0 +1,28 @@
+{
+  "name": "pco-mcp-explorer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Explore the Planning Center Online MCP server tool manifest from your browser.",
+  "homepage": "https://babelbeez.github.io/pco-mcp-explorer/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/babelbeez/pco-mcp-explorer.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "verify:live": "node scripts/verify-live.mjs"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.6.3",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  }
+}

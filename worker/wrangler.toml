@@ -1,0 +1,9 @@
+name = "pco-mcp-explorer-proxy"
+main = "src/index.ts"
+compatibility_date = "2025-06-20"
+workers_dev = true
+
+[vars]
+# Origins allowed to call this proxy. The first entry is the production site;
+# the localhost entries make local development work.
+ALLOWED_ORIGINS = "https://babelbeez.github.io,http://localhost:5173,http://127.0.0.1:5173"

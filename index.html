@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PCO MCP Explorer — Browse the Planning Center MCP tool manifest</title>
+    <meta
+      name="description"
+      content="Free, open-source tool for Planning Center Online developers: sign in with OAuth and explore the live MCP server tool manifest — every tool, parameter, and annotation in a readable, searchable table."
+    />
+    <link rel="canonical" href="https://babelbeez.github.io/pco-mcp-explorer/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://babelbeez.github.io/pco-mcp-explorer/" />
+    <meta property="og:title" content="PCO MCP Explorer — Browse the Planning Center MCP tool manifest" />
+    <meta
+      property="og:description"
+      content="Connect your Planning Center account and explore the live MCP tool manifest: tools, parameters, annotations, and raw JSON. Free and open source."
+    />
+    <meta property="og:site_name" content="PCO MCP Explorer" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="PCO MCP Explorer" />
+    <meta
+      name="twitter:description"
+      content="Explore the Planning Center MCP server tool manifest in your browser. Free and open source."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%90%9D%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "PCO MCP Explorer",
+        "url": "https://babelbeez.github.io/pco-mcp-explorer/",
+        "description": "Explore the Planning Center Online MCP server tool manifest in your browser. Free and open source.",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "creator": { "@type": "Organization", "name": "Babelbeez", "url": "https://www.babelbeez.com" }
+      }
+    </script>
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body class="min-h-screen bg-brand-background-light font-sans text-brand-body antialiased">
+    <div class="flex min-h-screen flex-col">
+      <header class="border-b border-gray-200 bg-white">
+        <div class="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-4">
+          <a href="./" class="flex items-center gap-2">
+            <span class="text-2xl" aria-hidden="true">🐝</span>
+            <span class="text-lg font-semibold text-brand-heading">PCO MCP Explorer</span>
+          </a>
+          <a
+            href="https://www.babelbeez.com"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs font-medium text-brand-body transition-colors hover:border-brand-primary hover:text-brand-primary"
+          >
+            Built by <span class="font-semibold text-brand-primary">Babelbeez</span>
+          </a>
+        </div>
+      </header>
+
+      <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-10">
+        <div
+          id="proxy-warning"
+          class="mb-6 hidden rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+          role="alert"
+        >
+          <strong class="font-semibold">Deployment not fully configured.</strong>
+          This copy of the app was built without <code class="font-mono">VITE_PROXY_BASE_URL</code>, so it cannot
+          reach the Planning Center MCP server. See the README (“Deploying your own copy”) for setup steps.
+        </div>
+
+        <div
+          id="status-banner"
+          class="mb-6 hidden rounded-lg border px-4 py-3 text-sm"
+          role="alert"
+        ></div>
+
+        <!-- Connect -->
+        <section id="connect-section">
+          <div class="max-w-3xl">
+            <h1 class="text-3xl font-bold tracking-tight text-brand-primary sm:text-4xl">
+              Explore the Planning Center MCP server
+            </h1>
+            <p class="mt-4 text-lg leading-relaxed">
+              A free, open-source tool for Planning Center developers. Sign in with your PCO account to see the
+              live MCP tool manifest — every tool, parameter, and annotation, parsed into a readable,
+              searchable table.
+            </p>
+          </div>
+
+          <div class="card mt-8 max-w-2xl p-6 sm:p-8">
+            <h2 class="text-lg font-semibold text-brand-heading">Connect to Planning Center</h2>
+            <ol class="mt-4 list-decimal space-y-2 pl-5 text-sm leading-relaxed">
+              <li>We register this tool with Planning Center (OAuth dynamic client registration) and send you to Planning Center's secure sign-in.</li>
+              <li>You choose exactly which scopes to grant on Planning Center's consent screen.</li>
+              <li>You return here and browse the live tool manifest.</li>
+            </ol>
+            <button id="connect-button" type="button" class="btn-primary mt-6">
+              Connect with Planning Center
+            </button>
+            <p class="mt-4 text-xs leading-relaxed text-gray-500">
+              Everything runs in your browser. Your access token is kept only in this tab's session storage,
+              is sent exclusively to Planning Center's servers (through a pass-through CORS proxy that stores
+              nothing — see the README), and is revoked and discarded when you disconnect.
+            </p>
+          </div>
+        </section>
+
+        <!-- Working state -->
+        <section id="working-section" class="hidden">
+          <div class="card mx-auto max-w-xl p-8 text-center">
+            <div
+              class="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-gray-200 border-t-brand-primary"
+              aria-hidden="true"
+            ></div>
+            <p id="working-message" class="text-sm font-medium text-brand-heading">Working…</p>
+          </div>
+        </section>
+
+        <!-- Manifest -->
+        <section id="manifest-section" class="hidden">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h1 class="text-2xl font-bold tracking-tight text-brand-heading">Planning Center MCP tool manifest</h1>
+              <p id="tools-count" class="mt-1 text-sm text-gray-500"></p>
+              <div id="scopes-list" class="mt-2 flex flex-wrap gap-1.5"></div>
+            </div>
+            <div class="flex shrink-0 items-center gap-2">
+              <button id="export-button" type="button" class="btn-secondary">Export JSON</button>
+              <button id="disconnect-button" type="button" class="btn-secondary">Disconnect</button>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <label for="tools-search" class="sr-only">Search tools</label>
+            <input
+              id="tools-search"
+              type="search"
+              placeholder="Search tools by name, description, or parameter…"
+              class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-brand-heading placeholder-gray-400 focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary"
+              autocomplete="off"
+            />
+          </div>
+
+          <p id="empty-tools" class="card mt-6 hidden p-6 text-center text-sm text-gray-500">
+            The MCP server did not return any tools for the scopes you granted.
+          </p>
+          <p id="no-results" class="card mt-6 hidden p-6 text-center text-sm text-gray-500">
+            No tools match your search.
+          </p>
+
+          <div id="tools-container" class="mt-6 flex flex-col gap-3"></div>
+        </section>
+      </main>
+
+      <footer class="border-t border-gray-200 bg-white">
+        <div class="mx-auto w-full max-w-5xl px-4 py-10">
+          <div class="card flex flex-col items-start gap-4 border-brand-primary/20 bg-brand-primary/5 p-6 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p class="font-semibold text-brand-heading">Want AI on your own website?</p>
+              <p class="mt-1 max-w-xl text-sm leading-relaxed">
+                Babelbeez adds a voice AI agent to any website — it answers questions, captures leads, and
+                hands off to humans. It connects to Planning Center through MCP, just like this explorer.
+              </p>
+            </div>
+            <a
+              href="https://www.babelbeez.com"
+              target="_blank"
+              rel="noopener"
+              class="btn-primary shrink-0"
+            >
+              Learn more at babelbeez.com
+            </a>
+          </div>
+          <div class="mt-8 flex flex-col items-start justify-between gap-3 text-xs text-gray-500 sm:flex-row sm:items-center">
+            <p>
+              PCO MCP Explorer is open source (MIT) and not affiliated with Planning Center.
+            </p>
+            <div class="flex items-center gap-4">
+              <a
+                href="https://github.com/babelbeez/pco-mcp-explorer"
+                target="_blank"
+                rel="noopener"
+                class="font-medium text-brand-primary hover:underline"
+              >GitHub</a>
+              <a
+                href="https://help.planningcenter.com/en/151880-connect-ai-tools-to-planning-center.html"
+                target="_blank"
+                rel="noopener"
+                class="font-medium text-brand-primary hover:underline"
+              >PCO MCP docs</a>
+              <a
+                href="https://www.babelbeez.com"
+                target="_blank"
+                rel="noopener"
+                class="font-medium text-brand-primary hover:underline"
+              >Babelbeez</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

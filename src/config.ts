@@ -3,8 +3,13 @@
 /** Canonical PCO MCP server URL (only upstream host the proxy is allowed to reach). */
 export const PCO_SERVER_URL = 'https://mcp.planningcenteronline.com/mcp';
 
-/** OAuth client metadata used during Dynamic Client Registration. */
-export const CLIENT_NAME = 'PCO MCP Explorer';
+/**
+ * OAuth client metadata used during Dynamic Client Registration.
+ * Note: PCO rejects client names containing their brand strings ("PCO",
+ * "Planning Center") for non-localhost redirect URIs — an anti-impersonation
+ * guard, since the name is shown on the consent screen.
+ */
+export const CLIENT_NAME = 'Babelbeez MCP Explorer';
 export const CLIENT_HOMEPAGE = 'https://github.com/babelbeez/pco-mcp-explorer';
 
 /** MCP protocol version used for initialize (matches known-good PCO behavior). */

@@ -90,9 +90,11 @@ export async function discoverProviderMetadata(
   const server = new URL(serverUrl);
 
   // --- 1. RFC 9728 protected-resource metadata -----------------------------
+  // Root location first (PCO serves it there); the RFC 9728 path-insertion
+  // variant is kept as a fallback for servers that scope metadata per path.
   const resourceCandidates = dedupe([
-    `${server.origin}/.well-known/oauth-protected-resource${server.pathname === '/' ? '' : server.pathname}`,
     `${server.origin}/.well-known/oauth-protected-resource`,
+    `${server.origin}/.well-known/oauth-protected-resource${server.pathname === '/' ? '' : server.pathname}`,
   ]);
 
   let resourceMetadata: Record<string, unknown> | null = null;

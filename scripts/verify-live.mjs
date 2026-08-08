@@ -57,7 +57,9 @@ const registrationResponse = await fetch(authServer.registration_endpoint, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
   body: JSON.stringify({
-    client_name: 'PCO MCP Explorer (verify-live)',
+    // Must match the app's DCR client_name policy: PCO blocks brand strings
+    // ("PCO", "Planning Center") in client names for non-localhost redirects.
+    client_name: 'Babelbeez MCP Explorer (verify-live)',
     client_uri: 'https://github.com/babelbeez/pco-mcp-explorer',
     redirect_uris: [redirectUri],
     grant_types: ['authorization_code', 'refresh_token'],

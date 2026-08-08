@@ -51,7 +51,15 @@ export async function registerNewClient(
   }
 
   if (!response.ok) {
-    throw new DcrError(`Dynamic client registration was rejected (HTTP ${response.status}).`);
+    // Surface the provider's own explanation (e.g. OAuth error_description) so
+    // registration policy issues are diagnosable without a network inspector.
+    const payload: unknown = await response.json().catch(() => null);
+    const detail = isRecord(payload) ? cleanString(payload.error_description) : null;
+    throw new DcrError(
+      detail
+        ? `Dynamic client registration was rejected: ${detail}`
+        : `Dynamic client registration was rejected (HTTP ${response.status}).`,
+    );
   }
 
   const data: unknown = await response.json().catch(() => null);

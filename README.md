@@ -6,8 +6,6 @@ Planning Center's new [MCP server](https://help.planningcenter.com/en/151880-con
 
 **Live tool → https://babelbeez.github.io/pco-mcp-explorer/**
 
-![PCO MCP Explorer screenshot](docs/screenshot.png)
-
 ## What it does
 
 1. **Discovers** the server's OAuth configuration (RFC 9728 protected-resource metadata → RFC 8414 authorization server metadata).
